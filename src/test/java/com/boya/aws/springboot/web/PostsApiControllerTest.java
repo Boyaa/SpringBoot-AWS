@@ -99,4 +99,35 @@ class PostsApiControllerTest {
 
     }
 
+    @Test
+    public void Posts_삭제된다() throws Exception {
+        // given
+        Posts savePosts = postsRepository.save(Posts.builder()
+                .title("title")
+                .content("content")
+                .author("author")
+                .build());
+
+        Long deleteId = savePosts.getId();
+
+        String url = "http://localhost:" + port + "/api/v1/posts/" + deleteId;
+
+        HttpEntity<Posts> requestEntity = new HttpEntity<>(savePosts);
+
+        //when
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Long.class);
+
+//                RestTemplate에서 exchange - 어떤 HTTP 메서드든 사용 가능, HTTP 헤더 새로 만들 수 있음
+//                                delete - 주어진 url 주소로 delete 메서드 실행
+
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Posts> postsList = postsRepository.findAll();
+        assertThat(postsList).isEmpty();
+
+
+    }
+
 }
