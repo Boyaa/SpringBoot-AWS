@@ -64,6 +64,7 @@ class PostsApiControllerTest {
 
     }
 
+
     @Test
     public void Posts_수정된다() throws Exception {
         // given
